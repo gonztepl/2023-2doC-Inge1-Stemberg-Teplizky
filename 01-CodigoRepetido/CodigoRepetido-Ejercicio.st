@@ -199,11 +199,10 @@ addCustomerNamed: aName
 	
 	active add: aName ! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'UNS 9/6/2023 19:37:22'!
+!CustomerBook methodsFor: 'customer management' stamp: 'ght 9/7/2023 10:44:13'!
 addSuspendAndRemoveCustomerNamed: customerName
 
-	self addCustomerNamed: customerName.
-	self suspendCustomerNamed: customerName.
+	self addAndSuspendCustomerNamed:customerName. 
 	self removeCustomerNamed:  customerName.! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
