@@ -1,1 +1,1 @@
-# 2023-2doC-Inge1-Stemberg-Teplizky
+# Ingeniería de Software I - 2º Cuatrimestre 2023. Grupo Stemberg - Teplizky.
