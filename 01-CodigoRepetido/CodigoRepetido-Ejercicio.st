@@ -71,7 +71,7 @@ test04CanNotRemoveAnInvalidCustomer
 	^self checkIfCustomerBook: customerBook performingAction: [customerBook removeCustomerNamed: 'Paul McCartney'.] hasError: NotFound .
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'UNS 9/6/2023 20:03:59'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'ght 9/6/2023 22:23:52'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
 	| customerBook paulMcCartney|
@@ -81,13 +81,13 @@ test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 	
 	customerBook addAndSuspendCustomerNamed: paulMcCartney.
 	
-	^self checkIf: customerBook hasACostumerNamed: paulMcCartney withSuspended: 1 andTotalCostumers: 1 withAction: [self assert: 	 	(customerBook includesCustomerNamed: paulMcCartney)]. 
+	^self checkIf: customerBook hasACostumerWithSuspended: 1 andTotalCostumers: 1 withAction: [self assert: 	 	(customerBook includesCustomerNamed: paulMcCartney)]. 
 	
 
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'UNS 9/6/2023 20:04:33'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'ght 9/6/2023 22:24:01'!
 test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 
 	| customerBook paulMcCartney|
@@ -97,7 +97,7 @@ test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 	
 	customerBook addSuspendAndRemoveCustomerNamed: paulMcCartney.
 	
-	^self checkIf: customerBook hasACostumerNamed: paulMcCartney withSuspended: 0 andTotalCostumers: 0 withAction: [self deny: 	(customerBook includesCustomerNamed: paulMcCartney)].
+	^self checkIf: customerBook hasACostumerWithSuspended: 0 andTotalCostumers: 0 withAction: [self deny: 	(customerBook includesCustomerNamed: paulMcCartney)].
 
 
 	
@@ -127,8 +127,8 @@ test08CanNotSuspendAnAlreadySuspendedCustomer
 	^self checkIfCustomerBook: customerBook performingAction: [customerBook suspendCustomerNamed: johnLennon.] hasError: CantSuspend .! !
 
 
-!CustomerBookTest methodsFor: 'new methods' stamp: 'UNS 9/6/2023 20:04:49'!
-checkIf: aCustomerBook hasACostumerNamed: aCustomerName withSuspended: suspendedCostumers andTotalCostumers: totalCustomers withAction: anAction
+!CustomerBookTest methodsFor: 'new methods' stamp: 'ght 9/6/2023 22:23:13'!
+checkIf: aCustomerBook hasACostumerWithSuspended: suspendedCostumers andTotalCostumers: totalCustomers withAction: anAction
 
 	self assert: 0 equals: aCustomerBook numberOfActiveCustomers.
 	self assert: suspendedCostumers equals: aCustomerBook numberOfSuspendedCustomers.
@@ -148,8 +148,8 @@ checkIfCustomerBook: aCustomerBook performingAction: anAction hasError: errorTyp
 			self assert: aCustomerBook numberOfCustomers = 1.
 			self assert: (aCustomerBook includesCustomerNamed: johnLennon) ]! !
 
-!CustomerBookTest methodsFor: 'new methods' stamp: 'UNS 9/6/2023 18:55:52'!
-testAction: anAction takesLessThan: numMs
+!CustomerBookTest methodsFor: 'new methods' stamp: 'ght 9/6/2023 22:15:34'!
+testAction: anAction takesLessThan: numberOfMilliseconds
 
 	| millisecondsBeforeRunning millisecondsAfterRunning |
 	
@@ -157,7 +157,7 @@ testAction: anAction takesLessThan: numMs
 	anAction value.
 	millisecondsAfterRunning := Time millisecondClockValue * millisecond.
 	
-	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < (numMs * millisecond)! !
+	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < (numberOfMilliseconds * millisecond)! !
 
 
 !classDefinition: #CustomerBook category: 'CodigoRepetido-Ejercicio'!
