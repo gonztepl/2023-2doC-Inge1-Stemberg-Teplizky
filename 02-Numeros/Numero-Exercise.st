@@ -472,13 +472,10 @@ hash
 	^aSubtrahend  subtractMeFromAnEntero: self
 	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 09:46:41'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'UNS 9/13/2023 20:22:31'!
 / aDivisor 
 	
-	^aDivisor divideIntoEntero: self.
-	"(aDivisor isKindOf: self class) ifTrue: [^Fraccion with: self over: aDivisor].
-	(aDivisor isKindOf: Fraccion) ifTrue: [^(self * aDivisor denominator) / aDivisor numerator].
-	^self invalidNumberType."! !
+	^aDivisor divideIntoEntero: self.! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
@@ -492,10 +489,10 @@ addToEntero: aEntero1stAdder
 	
 ! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 11:16:53'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'UNS 9/13/2023 20:36:28'!
 addToFraccion: aFraccion1stAdder 
-
-	^(self * aFraccion1stAdder denominator + aFraccion1stAdder numerator) / aFraccion1stAdder denominator.
+	
+	^aFraccion1stAdder addToEntero: self.
 	
 ! !
 
@@ -510,18 +507,10 @@ divideIntoFraccion: aFraccionDividend
 	^ aFraccionDividend numerator / (aFraccionDividend denominator * self).
 ! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HAW 9/24/2018 08:47:50'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'UNS 9/13/2023 20:23:05'!
 fibonacci
 
-	| one two |
-	
-	one := Entero with: 1.
-	two := Entero with: 2.
-	
-	self isNegative ifTrue: [self error: Entero negativeFibonacciErrorDescription ].	
-	(self isZero or: [self isOne]) ifTrue: [^one].
-	
-	^ (self - one) fibonacci + (self - two) fibonacci
+	^self subclassResponsibility
 		! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:00'!
@@ -536,11 +525,10 @@ multiplyToEntero: aEntero1stMultiplier
 	
 	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 11:17:40'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'UNS 9/13/2023 20:40:57'!
 multiplyToFraccion: aFraccion1stMultiplier
 	
-	^(self * aFraccion1stMultiplier numerator) / aFraccion1stMultiplier denominator.
-	
+	^aFraccion1stMultiplier multiplyToEntero: self.
 	
 	! !
 
@@ -556,10 +544,10 @@ subtractMeFromAFraccion: AFraccionMinuend
 	^(AFraccionMinuend numerator - (self * AFraccionMinuend denominator)) / AFraccionMinuend denominator.
 	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 15:04:31'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'UNS 9/13/2023 16:20:42'!
 subtractMeFromAnEntero: anEnteroMinuend
 	
-	^ Entero with: anEnteroMinuend integerValue - value	.! !
+	^ self class with: anEnteroMinuend integerValue - value	.! !
 
 
 !Entero methodsFor: 'printing' stamp: 'HAW 9/24/2018 08:53:19'!
@@ -597,17 +585,88 @@ isZero
 Entero class
 	instanceVariableNames: ''!
 
-!Entero class methodsFor: 'instance creation' stamp: 'NR 4/15/2021 16:42:24'!
-negativeFibonacciErrorDescription
-	^ ' Fibonacci no está definido aquí para Enteros Negativos!!!!!!'! !
-
-!Entero class methodsFor: 'instance creation' stamp: 'HernanWilkinson 5/7/2016 22:53'!
+!Entero class methodsFor: 'instance creation' stamp: 'UNS 9/13/2023 20:05:49'!
 with: aValue 
 	
 	"Esta verificacion esta puesta por si se equivocan y quieren crear un Entero pasando otra cosa que un Integer - Hernan"
 	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
+ 
+	aValue < 0 ifTrue: [^EnteroNegativo new initializeWith: aValue].
+	aValue = 0 ifTrue: [^Cero new initializeWith: 0.].
+	aValue = 1 ifTrue: [^Uno new initializeWith: 1.]. 
+	^EnteroPositivo new initializeWith: aValue! !
+
+
+!Entero class methodsFor: 'as yet unclassified' stamp: 'UNS 9/13/2023 20:14:51'!
+negativeFibonacciErrorDescription
+	^ ' Fibonacci no está definido aquí para Enteros Negativos!!!!!!'! !
+
+
+!classDefinition: #Cero category: 'Numero-Exercise'!
+Entero subclass: #Cero
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numero-Exercise'!
+
+!Cero methodsFor: 'as yet unclassified' stamp: 'UNS 9/13/2023 19:44:51'!
+fibonacci
 	
-	^self new initalizeWith: aValue! !
+	^Entero with: 1.! !
+
+
+!classDefinition: #EnteroNegativo category: 'Numero-Exercise'!
+Entero subclass: #EnteroNegativo
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numero-Exercise'!
+
+!EnteroNegativo methodsFor: 'as yet unclassified' stamp: 'UNS 9/13/2023 20:14:41'!
+fibonacci
+
+	^ self error: Entero negativeFibonacciErrorDescription ! !
+
+
+!classDefinition: #EnteroPositivo category: 'Numero-Exercise'!
+Entero subclass: #EnteroPositivo
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numero-Exercise'!
+
+!EnteroPositivo methodsFor: 'as yet unclassified' stamp: 'UNS 9/13/2023 19:58:29'!
+fibonacci
+
+	| one two |
+	
+	one := Entero with: 1.
+	two := Entero with: 2.
+	^ (self - one) fibonacci + (self - two) fibonacci! !
+
+
+!classDefinition: #Uno category: 'Numero-Exercise'!
+EnteroPositivo subclass: #Uno
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numero-Exercise'!
+
+!Uno methodsFor: 'as yet unclassified' stamp: 'UNS 9/13/2023 19:57:56'!
+fibonacci
+
+	^Entero with: 1! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Uno class' category: 'Numero-Exercise'!
+Uno class
+	instanceVariableNames: ''!
+
+!Uno class methodsFor: 'as yet unclassified' stamp: 'UNS 9/13/2023 19:46:53'!
+fibonacci
+
+	^Entero with: 1! !
 
 
 !classDefinition: #Fraccion category: 'Numero-Exercise'!
@@ -683,14 +742,11 @@ isZero
 	
 	^aSubtrahend subtractMeFromAFraccion: self.! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 09:52:19'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'UNS 9/13/2023 20:25:21'!
 / aDivisor 
 	
 	^aDivisor divideIntoFraccion: self.
-	
-	"(aDivisor isKindOf: self class) ifTrue: [^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)].
-	(aDivisor isKindOf: Entero) ifTrue: [^ numerator  / (denominator * aDivisor)].
-	^self invalidNumberType."! !
+! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:51:05'!
 addToEntero: aEntero1stAdder
