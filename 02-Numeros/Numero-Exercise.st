@@ -452,48 +452,65 @@ hash
 	^value hash! !
 
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 19:02:15'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:52:08'!
 * aMultiplier 
 	
-	(aMultiplier isKindOf: self class) ifTrue: [^self class with: value * aMultiplier integerValue].
-	(aMultiplier isKindOf: Fraccion) ifTrue: [^(self * aMultiplier numerator) / aMultiplier denominator].
-	^self invalidNumberType.
+	^aMultiplier multiplyToEntero: self.
 	
 	
 	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 19:02:00'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:39:59'!
 + anAdder 
 
-	(anAdder isKindOf: self class) ifTrue: [^self class with: value + anAdder integerValue].
-	(anAdder isKindOf: Fraccion) ifTrue: [^(self * anAdder denominator + anAdder numerator) / anAdder denominator].
-	^self invalidNumberType.
+	^anAdder addToEntero: self .
 ! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 19:13:55'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 10:14:32'!
 - aSubtrahend 
+	
+	"^aSubtrahend  subtractMeFromAEntero: self."
 	
 	(aSubtrahend isKindOf: self class) ifTrue: [^ self class with: value - aSubtrahend integerValue].
 	(aSubtrahend isKindOf: Fraccion) ifTrue: [^(self * aSubtrahend denominator - aSubtrahend numerator) / aSubtrahend denominator].
-	^self invalidNumberType.! !
+	^self invalidNumberType.
+	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 19:04:07'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 09:46:41'!
 / aDivisor 
 	
-	(aDivisor isKindOf: self class) ifTrue: [^Fraccion with: self over: aDivisor].
+	^aDivisor divideIntoEntero: self.
+	"(aDivisor isKindOf: self class) ifTrue: [^Fraccion with: self over: aDivisor].
 	(aDivisor isKindOf: Fraccion) ifTrue: [^(self * aDivisor denominator) / aDivisor numerator].
-	^self invalidNumberType.! !
+	^self invalidNumberType."! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
 	
 	^self class with: value // aDivisor integerValue! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'UNS 9/11/2023 22:10:53'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:38:37'!
 addToEntero: aEntero1stAdder 
 	
-	^aEntero1stAdder + self.
+	^self class with: value + aEntero1stAdder integerValue
 	
+! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:50:48'!
+addToFraccion: aFraccion1stAdder 
+
+	^(self * aFraccion1stAdder denominator + aFraccion1stAdder numerator) / aFraccion1stAdder denominator.
+! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 09:42:23'!
+divideIntoEntero: anEnteroDividend
+	
+	^Fraccion with: anEnteroDividend over: self.! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 10:00:57'!
+divideIntoFraccion: aFraccionDividend
+	
+	^ aFraccionDividend numerator / (aFraccionDividend denominator * self).
 ! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HAW 9/24/2018 08:47:50'!
@@ -515,10 +532,37 @@ greatestCommonDivisorWith: anEntero
 	
 	^self class with: (value gcd: anEntero integerValue)! !
 
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:45:27'!
+multiplyToEntero: aEntero1stMultiplier
+	
+	^self class with: value * aEntero1stMultiplier integerValue.
+	
+	! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:56:38'!
+multiplyToFraccion: aFraccion1stMultiplier
+	
+	^(self * aFraccion1stMultiplier numerator) / aFraccion1stMultiplier denominator.
+	
+	
+	! !
+
 !Entero methodsFor: 'arithmetic operations' stamp: 'NR 9/8/2019 23:07:58'!
 negated
 	
 	^self * (self class with: -1)
+	! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 10:11:30'!
+subtractMeFromAEntero: anEnteroMinuend
+	
+	^ anEnteroMinuend integerValue - self class with: value.
+	! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 10:11:16'!
+subtractMeFromAFraccion: AFraccionMinuend
+	
+	^(AFraccionMinuend numerator - self * AFraccionMinuend denominator) / AFraccionMinuend denominator.
 	! !
 
 
@@ -626,31 +670,22 @@ isZero
 	^false! !
 
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'UNS 9/11/2023 21:22:53'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:54:07'!
 * aMultiplier 
 	
-	(aMultiplier isKindOf: self class) ifTrue: 
-	[^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)].
-	(aMultiplier isKindOf: Entero) ifTrue: [^(numerator * aMultiplier) / denominator].
-	^self error: 'Tipo no permitido'
+	^aMultiplier multiplyToFraccion:  self.
 	
 	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'UNS 9/11/2023 21:23:34'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:43:33'!
 + anAdder 
 	
-	| newNumerator newDenominator |
-	
-	(anAdder isKindOf: self class) ifTrue: 
-		[newNumerator := (numerator * anAdder denominator) + (denominator * anAdder numerator).
-		newDenominator := denominator * anAdder denominator.
-		^newNumerator / newDenominator ].
+	^anAdder addToFraccion: self.! !
 
-	(anAdder isKindOf: Entero) ifTrue: [^(denominator * anAdder + numerator) / denominator].
-	^self error: 'Tipo no permitido'! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 19:59:53'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 10:14:45'!
 - aSubtrahend 
+	
+	"^aSubtrahend subtractMeFromAFraccion: self."
 	
 	| newNumerator newDenominator |
 	
@@ -663,17 +698,75 @@ isZero
 	^self invalidNumberType.
 ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 19:12:01'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 09:52:19'!
 / aDivisor 
 	
-	(aDivisor isKindOf: self class) ifTrue: [^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)].
+	^aDivisor divideIntoFraccion: self.
+	
+	"(aDivisor isKindOf: self class) ifTrue: [^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)].
 	(aDivisor isKindOf: Entero) ifTrue: [^ numerator  / (denominator * aDivisor)].
-	^self invalidNumberType.! !
+	^self invalidNumberType."! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:51:05'!
+addToEntero: aEntero1stAdder
+	
+	^(denominator * aEntero1stAdder + numerator) / denominator.! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:41:39'!
+addToFraccion: aFraccion1stAdder
+	
+	| newNumerator newDenominator |
+	
+	newNumerator := (numerator * aFraccion1stAdder denominator) + (denominator * aFraccion1stAdder numerator).
+	newDenominator := denominator * aFraccion1stAdder denominator.
+	^newNumerator / newDenominator.
+! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 09:59:07'!
+divideIntoEntero: anEnteroDividend
+	
+	^ anEnteroDividend * denominator / numerator.! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 09:50:33'!
+divideIntoFraccion: aFraccionDividend
+	
+	^(aFraccionDividend numerator * denominator) / (aFraccionDividend denominator * numerator).! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:53:01'!
+multiplyToEntero: aEntero1stMultiplier
+	
+	^(numerator * aEntero1stMultiplier) / denominator.
+	
+	! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/12/2023 22:53:33'!
+multiplyToFraccion: aFraccion1stMultiplier
+	
+	^(numerator * aFraccion1stMultiplier numerator) / (denominator * aFraccion1stMultiplier denominator).
+	
+	
+	! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'NR 9/8/2019 23:08:35'!
 negated
 	
 	 ^self class with: numerator * (Entero with: -1) over: denominator .! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 10:09:32'!
+subtractMeFromAFraccion: aFraccionMinuend
+	
+	| newNumerator newDenominator |
+	
+	newNumerator := (aFraccionMinuend numerator * denominator) - (aFraccionMinuend denominator * numerator).
+	newDenominator := aFraccionMinuend denominator * denominator.	
+	^newNumerator / newDenominator. 
+! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GHT 9/13/2023 10:12:42'!
+subtractMeFromAnEntero: anEnteroMinuend
+	
+	^(anEnteroMinuend * denominator - numerator) / denominator.
+! !
 
 
 !Fraccion methodsFor: 'printing' stamp: 'HAW 9/24/2018 08:54:46'!
