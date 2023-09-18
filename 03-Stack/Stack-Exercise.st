@@ -144,18 +144,32 @@ TestCase subclass: #SentenceFinderByPrefixTest
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 11:23:50'!
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 15:08:02'!
+test00StackIsEmptyReturnsEmpty
+	
+	|stack aSentenceFinderByPrefix sentences|
+	
+	stack := OOStack new.
+	aSentenceFinderByPrefix  := SentenceFinderByPrefix over: stack.
+	
+	sentences := aSentenceFinderByPrefix findByPrefix: 'prefix'.
+	
+	self assert: sentences isEmpty.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 15:02:31'!
 test01IfPrefixDoesNotExistReturnsEmpty
 	
 	|stack aSentenceFinderByPrefix sentences|
 	
 	stack := OOStack new.
 	aSentenceFinderByPrefix  := SentenceFinderByPrefix over: stack.
-	sentences := aSentenceFinderByPrefix find: 'prefix'.
+	
+	stack push: 'this is a sentence'.
+	sentences := aSentenceFinderByPrefix findByPrefix: 'prefix'.
 	
 	self assert: sentences isEmpty.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 11:24:38'!
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:39:13'!
 test02IfPrefixDoesExistReturnsNotEmpty
 	
 	|stack aSentenceFinderByPrefix sentences|
@@ -164,11 +178,11 @@ test02IfPrefixDoesExistReturnsNotEmpty
 	aSentenceFinderByPrefix  := SentenceFinderByPrefix over: stack.
 	
 	stack push: 'this is a sentence'.
-	sentences := aSentenceFinderByPrefix find: 'this'.
+	sentences := aSentenceFinderByPrefix findByPrefix: 'this'.
 	
 	self deny: sentences isEmpty.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 11:25:14'!
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:39:16'!
 test03FindMethodRejectsEmptyPrefix
 	
 	|stack aSentenceFinderByPrefix|
@@ -177,14 +191,14 @@ test03FindMethodRejectsEmptyPrefix
 	aSentenceFinderByPrefix  := SentenceFinderByPrefix over: stack.
 	
 	self 
-		should: [ aSentenceFinderByPrefix find: ''] 
+		should: [ aSentenceFinderByPrefix findByPrefix: ''] 
 		raise: Error - MessageNotUnderstood 
 		withExceptionDo: [ :anError |
 			self assert: anError messageText = SentenceFinderByPrefix emptyPrefixError 
 		].! !
 
-!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 11:25:56'!
-test04FindMethodRejectsSentencePrefix
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:42:16'!
+test04FindMethodRejectsPrefixWithSpaces
 
 	|stack aSentenceFinderByPrefix|
 	
@@ -192,13 +206,13 @@ test04FindMethodRejectsSentencePrefix
 	aSentenceFinderByPrefix  := SentenceFinderByPrefix over: stack.
 	
 	self
-		should: [aSentenceFinderByPrefix find: 'A sentence cannot be a prefix' ]
+		should: [aSentenceFinderByPrefix findByPrefix: 'This is my prefix' ]
 		raise: Error - MessageNotUnderstood
 		withExceptionDo: [ :anError |
-			self assert: anError messageText = SentenceFinderByPrefix sentenceAsPrefixError
+			self assert: anError messageText = SentenceFinderByPrefix prefixHasSpacesError 
 		].! !
 
-!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 11:26:58'!
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:39:24'!
 test05FindMethodFindsOneSentenceWithItsPrefix
 	
 	|stack aSentenceFinderByPrefix anExample sentences|
@@ -208,12 +222,12 @@ test05FindMethodFindsOneSentenceWithItsPrefix
 	
 	anExample := 'this is a sentence'.
 	stack push: anExample.
-	sentences := aSentenceFinderByPrefix find: 'this'.
+	sentences := aSentenceFinderByPrefix findByPrefix: 'this'.
 	
 	self assert: sentences size = 1. 
 	self assert: sentences first = anExample.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 11:31:41'!
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:39:34'!
 test06FindMethodFindsMultipleSentencesWithTheirPrefix
 	
 	|stack aSentenceFinderByPrefix sentences|
@@ -225,12 +239,12 @@ test06FindMethodFindsMultipleSentencesWithTheirPrefix
 	stack push: 'winning is everything.'.
 	stack push: 'The winds of Winter.'.
 	stack push: 'winter is here.'.
-	sentences := aSentenceFinderByPrefix find: 'win'.
+	sentences := aSentenceFinderByPrefix findByPrefix: 'win'.
 	
 	self assert: sentences size = 3.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 11:33:46'!
-test07FindMethodIsCaseSensitive
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 15:04:58'!
+test07FindMethodIsCaseSensitivePrefixExist
 	
 	|stack aSentenceFinderByPrefix sentences|
 	
@@ -241,9 +255,26 @@ test07FindMethodIsCaseSensitive
 	stack push: 'winter Is Here'.
 	stack push: 'Winter Is Here'.
 	stack push: 'winning is everything'.
-	sentences := aSentenceFinderByPrefix find: 'Wint'.
+	sentences := aSentenceFinderByPrefix findByPrefix: 'Wint'.
 	
 	self assert: sentences size = 2.
+	! !
+
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 15:05:41'!
+test08FindMethodIsCaseSensitivePrefixDoesNotExist
+	
+	|stack aSentenceFinderByPrefix sentences|
+	
+	stack := OOStack new.
+	aSentenceFinderByPrefix  := SentenceFinderByPrefix over: stack.
+	
+	stack push: 'winter is coming'.
+	stack push: 'winter Is Here'.
+	stack push: 'winter Is Here'.
+	stack push: 'winning is everything'.
+	sentences := aSentenceFinderByPrefix findByPrefix: 'Wint'.
+	
+	self assert: sentences size = 0.
 	! !
 
 
@@ -419,40 +450,41 @@ Object subclass: #SentenceFinderByPrefix
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 10:41:59'!
-checkIfPrefixIsNotASentence: aPrefix
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:41:07'!
+checkIfPrefixHasNoSpaces: aPrefix
 
-	(aPrefix includesSubString: ' ') ifTrue: [self error: SentenceFinderByPrefix sentenceAsPrefixError].! !
+	(aPrefix includesSubString: ' ') ifTrue: [self error: SentenceFinderByPrefix prefixHasSpacesError].! !
 
 !SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'GHT 9/18/2023 00:16:51'!
 checkIfPrefixIsNotEmpty: aPrefix
 
 	aPrefix ifEmpty: [self error: SentenceFinderByPrefix emptyPrefixError].! !
 
-!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'GHT 9/18/2023 00:27:48'!
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:41:21'!
 checkIfPrefixIsValid: aPrefix
 
 	self checkIfPrefixIsNotEmpty: aPrefix.
-	self checkIfPrefixIsNotASentence: aPrefix.! !
+	self checkIfPrefixHasNoSpaces: aPrefix.! !
 
-!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'GHT 9/18/2023 00:23:48'!
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:56:05'!
 copyStack 
 	
-	|newStack tempStack|
+	| tempStack newStack |
 	
-	newStack := OOStack new.
 	tempStack  := OOStack new.
+	newStack := OOStack new.
 	
-	self over: stack do: [:anElement | 
-		newStack push: anElement. 
+	self over: stack do: [:anElement | 		
 		tempStack push: anElement.
+		newStack push: anElement. 
 	].
 	self over: tempStack do: [: anElement | stack push: anElement].
 	
 	^newStack.! !
 
-!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'GHT 9/18/2023 00:28:02'!
-find: aPrefix 
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:49:22'!
+findByPrefix: aPrefix 
+
 	self checkIfPrefixIsValid: aPrefix.
 	^(self sentences) select: [:aSentence | aSentence beginsWith: aPrefix].! !
 
@@ -461,10 +493,10 @@ initializeOver: aStack
 
 	stack := aStack! !
 
-!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'GHT 9/18/2023 00:31:13'!
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:49:05'!
 over: aStack do: aBlock 
 	
-	|anElement|
+	| anElement |
 	
 	(aStack size) timesRepeat: [
 		anElement := aStack pop.
@@ -478,10 +510,10 @@ overStackDo: aBlock
 	
 	self over: (self copyStack) do: aBlock.! !
 
-!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'GHT 9/18/2023 00:30:16'!
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:49:13'!
 sentences
 	
-	|sentences|
+	| sentences |
 	
 	sentences := OrderedCollection new.
 	self overStackDo: [:aSentence | sentences add: aSentence].
@@ -503,7 +535,7 @@ over: aStack
 	
 	^self new initializeOver: aStack! !
 
-!SentenceFinderByPrefix class methodsFor: 'as yet unclassified' stamp: 'GHT 9/18/2023 00:10:34'!
-sentenceAsPrefixError
+!SentenceFinderByPrefix class methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:40:46'!
+prefixHasSpacesError
 
 	^'El prefijo no puede ser una oración.'! !
