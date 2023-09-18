@@ -535,7 +535,7 @@ over: aStack
 	
 	^self new initializeOver: aStack! !
 
-!SentenceFinderByPrefix class methodsFor: 'as yet unclassified' stamp: 'ght 9/18/2023 14:40:46'!
+!SentenceFinderByPrefix class methodsFor: 'as yet unclassified' stamp: 'UNS 9/18/2023 16:49:23'!
 prefixHasSpacesError
 
-	^'El prefijo no puede ser una oración.'! !
+	^'El prefijo no puede contener espacios.'! !
